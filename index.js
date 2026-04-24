@@ -1,17 +1,22 @@
 require('dotenv').config();
-const app = require('./src/app');             // Lấy app đã cấu hình từ thư mục src
-const connectDB = require('./src/config/db'); // Lấy hàm kết nối database
+const app = require('./src/app');
+const connectDB = require('./src/config/db');
 
 const PORT = process.env.PORT || 3000;
 
-// 1. Kết nối Database
-connectDB().then(() => {
-    // 2. Sau khi kết nối DB thành công mới cho Server chạy
-    app.listen(PORT, () => {
-        console.log(`-----------------------------------------`);
-        console.log(`🚀 Server đang chạy tại: http://localhost:${PORT}`);
-        console.log(`-----------------------------------------`);
-    });
-}).catch(err => {
-    console.error("Lỗi kết nối Database rồi Toàn ơi:", err);
-});
+// Sửa lại đoạn này để Vercel chạy mượt hơn
+const startServer = async () => {
+    try {
+        await connectDB(); // Đợi kết nối DB thành công
+        app.listen(PORT, () => {
+            console.log(`🚀 Server đang chạy tại: http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("Lỗi khởi động:", error);
+    }
+};
+
+startServer();
+
+// Dòng này cực kỳ quan trọng cho Vercel
+module.exports = app;
