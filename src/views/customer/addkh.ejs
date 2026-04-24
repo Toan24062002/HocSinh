@@ -1,0 +1,57 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-danger text-white text-center py-3">
+                    <h3 class="mb-0 fw-bold"><i class="fa-solid fa-user-plus me-2"></i>Thêm Khách Hàng Mới</h3>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted text-center mb-4">Vui lòng nhập đầy đủ thông tin khách hàng cần tư vấn mua xe.</p>
+                    
+                    <form action="/khachhang/addkh" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và Tên</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" name="name" class="form-control" placeholder="Nguyễn Văn A" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa chỉ Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" placeholder="example@gmail.com" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                                <input type="text" name="phone" class="form-control" placeholder="090x.xxx.xxx">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Địa chỉ cư trú</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                                <textarea name="address" class="form-control" rows="2" placeholder="Nhơn Mỹ, Chợ Mới, An Giang..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg shadow-sm">
+                                <i class="fa-solid fa-floppy-disk me-2"></i>Lưu Thông Tin
+                            </button>
+                            <a href="/khachhang" class="btn btn-outline-secondary">
+                                <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
