@@ -14,13 +14,7 @@ const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu
 const myLink = 'mongodb://phuoctoan:RYz9cB0FSoBRfB5B@ac-nqk8js2-shard-00-00.axman3t.mongodb.net:27017,ac-nqk8js2-shard-00-01.axman3t.mongodb.net:27017,ac-nqk8js2-shard-00-02.axman3t.mongodb.net:27017/HocSinhDB?ssl=true&replicaSet=atlas-14b4ir-shard-0&authSource=admin&appName=Cluster0';
 
 // 2. Kết nối Mongoose bằng biến tạm này
-mongoose.connect(myLink, {
-    serverSelectionTimeoutMS: 5000 
-}).then(() => {
-    console.log("✅ Đã kết nối MongoDB thành công trên Vercel");
-}).catch(err => {
-    console.error("❌ Lỗi kết nối Mongoose:", err.message);
-});
+
 
 // 3. Cấu hình Session cũng dùng biến tạm này luôn
 app.use(session({
