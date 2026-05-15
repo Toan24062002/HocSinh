@@ -8,23 +8,21 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
 // 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
-// 2. Sửa lại đoạn app.use(session(...))
 app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        // Thay vì dùng mongoUrl, mình dùng clientPromise
-        // Điều này giúp MongoStore đợi cho đến khi Mongoose kết nối xong
+        // Dùng lại kết nối đã có của mongoose thay vì dùng mongoUrl
         client: mongoose.connection.getClient(),
-        dbName: 'test', // Tên database của Toàn trên Atlas (thường là test)
-        stringify: false
+        dbName: 'test' // Hoặc tên DB của Toàn trong chuỗi connection
     }),
     cookie: { 
         maxAge: 3600000,
-        secure: false 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
     }
 }));
 
