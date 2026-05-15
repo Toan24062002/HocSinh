@@ -9,7 +9,35 @@ const MongoStore = require('connect-mongo').default;
 // 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
+// 1. Gán thẳng link kết nối vào một biến tạm trong code (thay User và Pass bằng cái Toàn đang dùng nhé)
+//const myLink = 'mongodb+srv://phuoctoan:RYz9cB0FSoBRfB5B@cluster0.axman3t.mongodb.net/HocSinhDB?retryWrites=true&w=majority';//
+const myLink = 'mongodb://phuoctoan:RYz9cB0FSoBRfB5B@ac-nqk8js2-shard-00-00.axman3t.mongodb.net:27017,ac-nqk8js2-shard-00-01.axman3t.mongodb.net:27017,ac-nqk8js2-shard-00-02.axman3t.mongodb.net:27017/HocSinhDB?ssl=true&replicaSet=atlas-14b4ir-shard-0&authSource=admin&appName=Cluster0';
 
+// 2. Kết nối Mongoose bằng biến tạm này
+mongoose.connect(myLink, {
+    serverSelectionTimeoutMS: 5000 
+}).then(() => {
+    console.log("✅ Đã kết nối MongoDB thành công trên Vercel");
+}).catch(err => {
+    console.error("❌ Lỗi kết nối Mongoose:", err.message);
+});
+
+// 3. Cấu hình Session cũng dùng biến tạm này luôn
+app.use(session({
+    secret: 'huy_future_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({
+        mongoUrl: myLink, // Dùng thẳng link, không qua process.env nữa
+        dbName: 'HocSinhDB',
+        collectionName: 'sessions',
+    }),
+    cookie: { 
+        maxAge: 3600000,
+        secure: false 
+    }
+}));
+/*
 mongoose.connect(process.env.MONGODB_URI, {
     serverSelectionTimeoutMS: 5000 // Đợi tối đa 5 giây
 }).then(() => {
@@ -34,7 +62,7 @@ app.use(session({
         secure: false 
     }
 }));
-
+*/
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
