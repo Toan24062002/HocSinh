@@ -4,11 +4,17 @@ const app = express();
 
 const session = require('express-session');
 
+const MongoStore = require('connect-mongo');
+
 app.use(session({
-    secret: 'huy_future_secret_key', // Chuỗi bí mật để mã hóa session
+    secret: 'huy_future_secret_key',
     resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 3600000 } // Session tồn tại trong 1 tiếng (tính bằng ms)
+    saveUninitialized: false, // Để false cho bảo mật hơn
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI, // Dùng link Atlas của Toàn
+        ttl: 14 * 24 * 60 * 60 // Lưu trong 14 ngày
+    }),
+    cookie: { maxAge: 3600000 }
 }));
 
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
