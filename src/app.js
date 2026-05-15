@@ -10,10 +10,10 @@ app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false, // Để false cho bảo mật hơn
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI, // Dùng link Atlas của Toàn
-        ttl: 14 * 24 * 60 * 60 // Lưu trong 14 ngày
-    }),
+   // store: MongoStore.create({
+    //    mongoUrl: process.env.MONGO_URI, // Dùng link Atlas của Toàn
+  //      ttl: 14 * 24 * 60 * 60 // Lưu trong 14 ngày
+  //  }),
     cookie: { maxAge: 3600000 }
 }));
 
