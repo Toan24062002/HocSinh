@@ -11,19 +11,15 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
 app.use(session({
-    secret: 'huy_future_secret_key',
+
+    secret: 'huy_future_secret_key', // Chuỗi bí mật để mã hóa session
+
     resave: false,
-    saveUninitialized: false,
-   // store: MongoStore.create({
-        // Dùng lại kết nối đã có của mongoose thay vì dùng mongoUrl
-    //    client: mongoose.connection.getClient(),
-    //    dbName: 'test' // Hoặc tên DB của Toàn trong chuỗi connection
-   // }),
-    cookie: { 
-        maxAge: 3600000,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax'
-    }
+
+    saveUninitialized: true,
+
+    cookie: { maxAge: 3600000 } // Session tồn tại trong 1 tiếng (tính bằng ms)
+
 }));
 
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
