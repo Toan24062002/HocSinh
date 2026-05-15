@@ -11,15 +11,22 @@ const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
 app.use(session({
-
-    secret: 'huy_future_secret_key', // Chuỗi bí mật để mã hóa session
-
+    secret: 'huy_future_secret_key',
     resave: false,
-
-    saveUninitialized: true,
-
-    cookie: { maxAge: 3600000 } // Session tồn tại trong 1 tiếng (tính bằng ms)
-
+    saveUninitialized: false,
+    store: MongoStore.create({
+        // Sử dụng lại kết nối của mongoose cho đồng bộ
+        client: mongoose.connection.getClient(),
+        // Sửa dbName thành HocSinhDB cho đúng với link Atlas của Toàn
+        dbName: 'HocSinhDB', 
+        stringify: false
+    }),
+    cookie: { 
+        maxAge: 3600000,
+        // Để false nếu Toàn chưa cấu hình HTTPS hoàn chỉnh trên Vercel, 
+        // hoặc cứ để như dưới nếu muốn bảo mật khi chạy production
+        secure: false 
+    }
 }));
 
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
