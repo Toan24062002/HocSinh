@@ -8,6 +8,15 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo').default;
 // 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
+if (mongoose.connection.readyState === 0) {
+    mongoose.connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000
+    }).then(() => {
+        console.log("✅ Vercel đã kết nối MongoDB thành công!");
+    }).catch(err => {
+        console.error("❌ Lỗi kết nối Mongoose trên Vercel:", err.message);
+    });
+}
 
 // 1. Gán thẳng link kết nối vào một biến tạm trong code (thay User và Pass bằng cái Toàn đang dùng nhé)
 //const myLink = 'mongodb+srv://phuoctoan:RYz9cB0FSoBRfB5B@cluster0.axman3t.mongodb.net/HocSinhDB?retryWrites=true&w=majority';//
