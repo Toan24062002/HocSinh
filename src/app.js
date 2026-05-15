@@ -2,6 +2,15 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
+const session = require('express-session');
+
+app.use(session({
+    secret: 'huy_future_secret_key', // Chuỗi bí mật để mã hóa session
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 3600000 } // Session tồn tại trong 1 tiếng (tính bằng ms)
+}));
+
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -23,15 +32,35 @@ app.use(express.urlencoded({ extended: true }));
 // Ví dụ: 
 // const homeRoutes = require('./routes/homeRoutes');
  const customerRoutes = require('./routes/customerRoutes');
+ const xemayRoutes = require('./routes/xemayRoutes');
+ const adminRoutes = require('./routes/adminRoutes');
+ const slideRoutes = require('./routes/slideRoutes');
+ const authRoutes = require('./routes/authRoutes');
+
 
 // 5. Sử dụng các Route
 app.get('/', (req, res) => {
     // Thay vì dùng res.send, Fullstack sẽ dùng res.render để hiện file giao diện
     res.render('pages/index', { title: 'Trang Chủ',user: 'Nguyễn  Toàn' });
 });
+app.get('/lienhe', (req, res) => {
+    // Thay vì dùng res.send, Fullstack sẽ dùng res.render để hiện file giao diện
+    res.render('pages/lienhe', { title: 'Trang liên hệ'});
+});
+app.get('/dichvu', (req, res) => {
+    // Thay vì dùng res.send, Fullstack sẽ dùng res.render để hiện file giao diện
+    res.render('pages/dichvu', { title: 'Trang dịch vụ'});
+});
+
 
 app.use('/khachhang', customerRoutes);
 app.use('/themmoikhachhang', customerRoutes);
+app.use('/xemay', xemayRoutes);
+app.use('/admin', adminRoutes);
+app.use('/slide', slideRoutes);
+app.use('/auth', authRoutes);
 
 // Xuất app ra cho index.js
+
+
 module.exports = app;

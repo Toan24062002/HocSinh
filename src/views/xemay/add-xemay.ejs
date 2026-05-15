@@ -1,0 +1,84 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0" style="transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h3 class="mb-0 text-uppercase fw-bold">Thêm Xe Máy Mới</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/xemay/addxemay" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hãng xe</label>
+                                <select name="hangxe" class="form-select" required>
+                                    <option value="Honda" selected>Honda</option>
+                                    <option value="Yamaha">Yamaha</option>
+                                    <option value="Suzuki">Suzuki</option>
+                                    <option value="Kawwasaki">Kawwasaki</option>
+                                    <option value="SYM">SYM</option>
+                                    <option value=" VinFast">VinFast</option>
+                                    <option value="Piaggo">Piaggo</option>
+                                    <option value="Yadea">Yadea</option>
+                                    <option value="Pega">Pega</option>
+                                    <option value="Kymco">Kymco</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tên xe</label>
+                                <input type="text" name="tenxe" class="form-control" placeholder="Ví dụ: Future 125 FI" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Loại xe</label>
+                                <select name="loaixe" class="form-select" required>
+                                    <option value="Xe số">Xe số</option>
+                                    <option value="Xe tay ga">Xe tay ga</option>
+                                    <option value="Xe côn tay">Xe côn tay</option>
+                                    <option value="Xe côn tay">Xe PKL</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dung tích (cc)</label>
+                                <input type="text" name="dungtichxilanh" class="form-control" placeholder="Ví dụ: 124.9 cc">
+                            </div>
+                        </div>
+                         <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Màu sắc</label>
+                            <input type="text" name="m" class="form-control" placeholder="xanh, đỏ , tím,..." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Giá bán (VNĐ)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">₫</span>
+                                <input type="number" name="gia" class="form-control" placeholder="Ví dụ: 32500000" required>
+                            </div>
+                            <div class="form-text text-muted">Nhập đầy đủ số (không bao gồm dấu chấm/phẩy).</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea name="motaxemay" class="form-control" rows="4" placeholder="Nhập đặc điểm nổi bật, thông số kỹ thuật..."></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">URL Ảnh</label>
+                            <input type="text" name="linkanh" class="form-control" placeholder="dán link tại đây" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold shadow">
+                                <i class="fa-solid fa-save me-2"></i>Lưu Xe Máy
+                            </button>
+                            <a href="/xemay" class="btn btn-outline-secondary">Quay lại danh sách</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

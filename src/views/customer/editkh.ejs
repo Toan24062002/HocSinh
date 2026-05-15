@@ -1,0 +1,19 @@
+<form action="/khachhang/update/<%= customer._id %>" method="POST">
+    <div class="mb-3">
+        <label class="form-label">Họ và Tên</label>
+        <input type="text" name="name" class="form-control" value="<%= customer.name %>" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" value="<%= customer.email %>" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Số điện thoại</label>
+        <input type="text" name="phone" class="form-control" value="<%= customer.phone %>">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Địa chỉ</label>
+        <textarea name="address" class="form-control"><%= customer.address %></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+</form>

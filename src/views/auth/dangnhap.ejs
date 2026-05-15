@@ -1,0 +1,37 @@
+<div class="card auth-card p-4">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-danger">Xe Máy Phát Huy</h3>
+        <p class="text-muted">Đăng nhập hệ thống quản trị</p>
+    </div>
+
+    <form action="/auth/dangnhap" method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tài khoản (Email)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                <input type="email" name="email" class="form-control" placeholder="admin@example.com" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+        </div>
+        <div class="mb-3 d-flex justify-content-between">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="remember">
+                <label class="form-check-label" for="remember">Ghi nhớ</label>
+            </div>
+            <a href="#" class="text-decoration-none small">Quên mật khẩu?</a>
+        </div>
+        <button type="submit" class="btn btn-danger btn-honda w-100 mb-3 text-white">ĐĂNG NHẬP</button>
+    </form>
+
+    <div class="text-center">
+        <p class="small mb-0">Chưa có tài khoản? <a href="/auth/dangky" class="text-danger fw-bold text-decoration-none">Đăng ký ngay</a></p>
+        <hr>
+        <a href="/" class="btn btn-sm btn-outline-secondary border-0"><i class="fa-solid fa-arrow-left me-2"></i>Quay lại trang chủ</a>
+    </div>
+</div>

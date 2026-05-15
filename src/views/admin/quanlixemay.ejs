@@ -1,0 +1,180 @@
+<div class="container">
+    <h3>QUẢN LÝ XE MÁY</h3>
+    <nav><button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasAdd">
+            <i class="bi bi-plus-circle"></i> Thêm xe
+        </button></nav>
+    <div class="card shadow border-0 mt-3">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>STT</th>
+                        <th>Hãng</th>
+                        <th>Tên</th>
+                        <th>Giá</th>
+                        <th>Phân Khối / Dung tích xi lanh</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (danhSachXe && danhSachXe.length> 0) { %>
+                        <% danhSachXe.forEach((item, index)=> { %>
+                            <tr>
+                                <td class="fw-bold">
+                                    <%= index + 1 %>
+                                </td>
+                                <td class="text-primary fw-bold">
+                                    <%= item.hangxe %>
+                                </td>
+                                <td>
+                                    <%= item.tenxe %>
+                                </td>
+                                <td>
+                                    <%= item.gia || 'Chưa có' %>
+                                </td>
+                                <td>
+                                    <%= item.dungtichxilanh %>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasEdit"
+                                            onclick="fillData('<%= item._id %>', '<%= item.tenxe %>', '<%= item.hangxe %>', '<%= item.gia %>', '<%= item.dungtichxilanh %>')">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <a href="/xemay/delete/<%= item._id %>"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            <i>Chưa có khách hàng nào trong danh sách.</i>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Thêm-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAdd" style="width: 800px;">
+    <div class="offcanvas-header bg-dark text-white">
+        <h5 class="offcanvas-title fw-bold">CHỈNH SỬA XE MÁY</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form action="/xemay/addxemay" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hãng xe</label>
+                                <select name="hangxe" class="form-select" required>
+                                    <option value="Honda" selected>Honda</option>
+                                    <option value="Yamaha">Yamaha</option>
+                                    <option value="Suzuki">Suzuki</option>
+                                    <option value="Kawwasaki">Kawwasaki</option>
+                                    <option value="SYM">SYM</option>
+                                    <option value=" VinFast">VinFast</option>
+                                    <option value="Piaggo">Piaggo</option>
+                                    <option value="Yadea">Yadea</option>
+                                    <option value="Pega">Pega</option>
+                                    <option value="Kymco">Kymco</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tên xe</label>
+                                <input type="text" name="tenxe" class="form-control" placeholder="Ví dụ: Future 125 FI" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Loại xe</label>
+                                <select name="loaixe" class="form-select" required>
+                                    <option value="Xe số">Xe số</option>
+                                    <option value="Xe tay ga">Xe tay ga</option>
+                                    <option value="Xe côn tay">Xe côn tay</option>
+                                    <option value="Xe côn tay">Xe PKL</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dung tích (cc)</label>
+                                <input type="text" name="dungtichxilanh" class="form-control" placeholder="Ví dụ: 124.9 cc">
+                            </div>
+                        </div>
+                         <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Màu sắc</label>
+                            <input type="text" name="m" class="form-control" placeholder="xanh, đỏ , tím,..." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Giá bán (VNĐ)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">₫</span>
+                                <input type="number" name="gia" class="form-control" placeholder="Ví dụ: 32500000" required>
+                            </div>
+                            <div class="form-text text-muted">Nhập đầy đủ số (không bao gồm dấu chấm/phẩy).</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea name="motaxemay" class="form-control" rows="4" placeholder="Nhập đặc điểm nổi bật, thông số kỹ thuật..."></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">URL Ảnh</label>
+                            <input type="text" name="linkanh" class="form-control" placeholder="dán link tại đây" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold shadow">
+                                <i class="fa-solid fa-save me-2"></i>Lưu Xe Máy
+                            </button>
+                            <a href="/xemay" class="btn btn-outline-secondary">Quay lại danh sách</a>
+                        </div>
+                    </form>
+    </div>
+</div>
+
+
+<!--sửa-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEdit" style="width: 400px;">
+    <div class="offcanvas-header bg-dark text-white">
+        <h5 class="offcanvas-title fw-bold">CHỈNH SỬA XE MÁY</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="formEdit" method="POST">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tên xe máy</label>
+                <input type="text" id="in-ten" name="tenxe" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Hãng xe</label>
+                <input type="text" id="in-hang" name="hangxe" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Giá bán (VNĐ)</label>
+                <input type="number" id="in-gia" name="gia" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Dung tích (cc)</label>
+                <input type="text" id="in-dungtich" name="dungtichxilanh" class="form-control">
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-danger w-100 fw-bold py-2">
+                <i class="fa-solid fa-floppy-disk me-2"></i>CẬP NHẬT NGAY
+            </button>
+        </form>
+    </div>
+</div>

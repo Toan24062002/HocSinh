@@ -1,0 +1,30 @@
+<div class="card auth-card p-4">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-danger">ĐĂNG KÝ</h3>
+        <p class="text-muted">Tạo tài khoản quản trị mới</p>
+    </div>
+
+    <form action="/auth/dangky" method="POST">
+        <div class="mb-3">
+            <label class="form-label">Họ và Tên</label>
+            <input type="text" name="fullname" class="form-control" placeholder="Nguyễn Văn Toàn" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email công việc</label>
+            <input type="email" name="email" class="form-control" placeholder="toan@huyfuture.com" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mật khẩu</label>
+            <input type="password" name="password" class="form-control" placeholder="Ít nhất 6 ký tự" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Xác nhận mật khẩu</label>
+            <input type="password" name="confirmPassword" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-danger btn-honda w-100 mb-3 text-white">TẠO TÀI KHOẢN</button>
+    </form>
+
+    <div class="text-center">
+        <p class="small mb-0">Đã có tài khoản? <a href="/auth/login" class="text-danger fw-bold text-decoration-none">Đăng nhập</a></p>
+    </div>
+</div>

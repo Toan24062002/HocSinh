@@ -1,0 +1,68 @@
+.imbg{
+    background-image: url("/images/bgimg.png");
+    height: 916px;
+}
+
+.navbar {
+    transition: all 0.4s ease-in-out;
+    padding: 20px 0;
+    background-color: #ffffff; /* Cho màu nền ban đầu để dễ thấy */
+}
+
+/* Khi lăn chuột xuống (Class này sẽ được JS thêm vào) */
+.navbar.navbar-scrolled {
+    padding: 5px 0;
+    background-color: rgb(178, 178, 178) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Thu nhỏ Logo khi lăn chuột */
+.navbar.navbar-scrolled img {
+    width: 100px !important; /* Lúc đầu 200px, lăn xuống còn 150px */
+    transition: width 0.5s ease;
+}
+/* Hiện menu khi hover cho chuyên nghiệp */
+.dropdown:hover > .dropdown-menu,
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Định vị menu cấp 3 sang bên phải */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%; /* Đẩy menu con sang phải */
+    margin-top: -1px;
+}
+
+/* Xóa mũi tên mặc định của Bootstrap ở cấp con nếu thích gọn */
+.dropdown-submenu > a::after {
+    border: none;
+    content: "\f105"; /* Icon mũi tên phải của FontAwesome */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    float: right;
+    margin-top: 3px;
+}
+.dropdown-item:hover{
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
+    transform: scale(1.02) !important;
+    border-radius: 7px;
+}
+.item-card {
+        transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    }
+
+    .item-card:hover {
+        transform: scale(1.05); /* Phóng to 5% */
+        box-shadow: 0 10px 20px rgba(106, 100, 100, 0.247) !important;
+        z-index: 10;
+    }
+
+    .card-title {
+        height: 3rem; /* Đảm bảo các card đều nhau dù tên xe dài ngắn khác nhau */
+        overflow: hidden;
+    }
