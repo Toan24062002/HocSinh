@@ -9,21 +9,27 @@ const MongoStore = require('connect-mongo').default;
 // 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
+mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000 // Đợi tối đa 5 giây
+}).then(() => {
+    console.log("✅ Đã kết nối MongoDB thành công trên Vercel");
+}).catch(err => {
+    console.error("❌ Lỗi kết nối Mongoose:", err.message);
+});
+
+// CẤU HÌNH LẠI SESSION ĐỂ TỰ ĐỘNG KẾT NỐI:
 app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
-        // Đảm bảo biến này đã được nạp ở dòng 1
+        // Dùng thẳng biến môi trường để Store tự lo liệu kết nối
         mongoUrl: process.env.MONGODB_URI, 
         dbName: 'HocSinhDB',
         collectionName: 'sessions',
-        ttl: 14 * 24 * 60 * 60,
-        autoRemove: 'native' 
     }),
     cookie: { 
         maxAge: 3600000,
-        // Khi chạy trên Vercel (Production), nên để false nếu chưa cấu hình Trust Proxy
         secure: false 
     }
 }));
