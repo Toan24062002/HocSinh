@@ -13,15 +13,17 @@ app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false,
-    // SỬA CHỖ NÀY: Trong v6, Toàn dùng "new MongoStore" thay vì "MongoStore.create"
     store: new MongoStore({
-        mongoUrl: process.env.MONGODB_URI,
+        // Đảm bảo biến này đã được nạp ở dòng 1
+        mongoUrl: process.env.MONGODB_URI, 
         dbName: 'HocSinhDB',
-        collectionName: 'sessions', // Tên bảng lưu session trong DB
-        ttl: 14 * 24 * 60 * 60
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60,
+        autoRemove: 'native' 
     }),
     cookie: { 
         maxAge: 3600000,
+        // Khi chạy trên Vercel (Production), nên để false nếu chưa cấu hình Trust Proxy
         secure: false 
     }
 }));
