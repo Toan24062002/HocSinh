@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -6,15 +7,23 @@ const session = require('express-session');
 
 const MongoStore = require('connect-mongo');
 
+// 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
+const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
+
 app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
-    saveUninitialized: false, // Để false cho bảo mật hơn
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI, // Dùng link Atlas của Toàn
-        ttl: 14 * 24 * 60 * 60 // Lưu trong 14 ngày
-    }),
-    cookie: { maxAge: 3600000 }
+    saveUninitialized: false,
+   // store: MongoStore.create({
+        // Dùng lại kết nối đã có của mongoose thay vì dùng mongoUrl
+    //    client: mongoose.connection.getClient(),
+    //    dbName: 'test' // Hoặc tên DB của Toàn trong chuỗi connection
+   // }),
+    cookie: { 
+        maxAge: 3600000,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
 }));
 
 // 1. Cấu hình View Engine (để đọc các file giao diện .ejs)
