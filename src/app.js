@@ -15,17 +15,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        // Sử dụng lại kết nối của mongoose cho đồng bộ
-        client: mongoose.connection.getClient(),
-        // Sửa dbName thành HocSinhDB cho đúng với link Atlas của Toàn
-        dbName: 'HocSinhDB', 
-        stringify: false
+        // Dùng lại biến môi trường có chữ DB cho đồng bộ
+        mongoUrl: process.env.MONGODB_URI, 
+        dbName: 'HocSinhDB',
+        touchAfter: 24 * 3600 // Để App chạy nhẹ hơn
     }),
     cookie: { 
         maxAge: 3600000,
-        // Để false nếu Toàn chưa cấu hình HTTPS hoàn chỉnh trên Vercel, 
-        // hoặc cứ để như dưới nếu muốn bảo mật khi chạy production
-        secure: false 
+        secure: false // Để false để không bị lỗi trên Vercel khi test
     }
 }));
 
