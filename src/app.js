@@ -5,8 +5,7 @@ const app = express();
 
 const session = require('express-session');
 
-const MongoStore = require('connect-mongo');
-
+const MongoStore = require('connect-mongo').default;
 // 1. Thêm mongoose vào đầu file app.js (nếu chưa có)
 const mongoose = require('mongoose'); // Nhớ require thêm mongoose ở đầu app.js
 
@@ -14,15 +13,16 @@ app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-        // Dùng lại biến môi trường có chữ DB cho đồng bộ
-        mongoUrl: process.env.MONGODB_URI, 
+    // SỬA CHỖ NÀY: Trong v6, Toàn dùng "new MongoStore" thay vì "MongoStore.create"
+    store: new MongoStore({
+        mongoUrl: process.env.MONGODB_URI,
         dbName: 'HocSinhDB',
-        touchAfter: 24 * 3600 // Để App chạy nhẹ hơn
+        collectionName: 'sessions', // Tên bảng lưu session trong DB
+        ttl: 14 * 24 * 60 * 60
     }),
     cookie: { 
         maxAge: 3600000,
-        secure: false // Để false để không bị lỗi trên Vercel khi test
+        secure: false 
     }
 }));
 
