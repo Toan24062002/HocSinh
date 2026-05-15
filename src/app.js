@@ -14,11 +14,11 @@ app.use(session({
     secret: 'huy_future_secret_key',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
+   // store: MongoStore.create({
         // Dùng lại kết nối đã có của mongoose thay vì dùng mongoUrl
-        client: mongoose.connection.getClient(),
-        dbName: 'test' // Hoặc tên DB của Toàn trong chuỗi connection
-    }),
+    //    client: mongoose.connection.getClient(),
+    //    dbName: 'test' // Hoặc tên DB của Toàn trong chuỗi connection
+   // }),
     cookie: { 
         maxAge: 3600000,
         secure: process.env.NODE_ENV === 'production',
