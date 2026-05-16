@@ -43,4 +43,32 @@
                         </div>
                         <% } %>
     </div>
+    <% if (typeof tongSoTrang !== 'undefined' && tongSoTrang > 1) { %>
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center shadow-sm d-inline-flex" style="border-radius: 10px; overflow: hidden;">
+                
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link border-0 text-dark bg-light py-2 px-3" href="/xemay?page=<%= currentPage - 1 %>">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </li>
+
+                <% for (let i = 1; i <= tongSoTrang; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link border-0 py-2 px-3 <%= currentPage === i ? 'bg-dark text-white fw-bold' : 'text-dark bg-white' %>" 
+                           href="/xemay?page=<%= i %>">
+                            <%= i %>
+                        </a>
+                    </li>
+                <% } %>
+
+                <li class="page-item <%= currentPage === tongSoTrang ? 'disabled' : '' %>">
+                    <a class="page-link border-0 text-dark bg-light py-2 px-3" href="/xemay?page=<%= currentPage + 1 %>">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    <% } %>
 </div>

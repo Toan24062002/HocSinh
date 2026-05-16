@@ -5,12 +5,12 @@ const xemayController = require('../controllers/xemayController');
 const customerController = require('../controllers/customerController');
 const slideController = require('../controllers/slideController');
 
-const authMiddleware = require('../middlewares/authMiddleware');
-
-router.get('/',authMiddleware, adminController.getTongquan);
-router.get('/quanlixemay',authMiddleware, xemayController.getListAdmin);
-router.get('/quanlikhachhang', authMiddleware,customerController.getList);
-router.get('/quanlikhachhang', authMiddleware,customerController.getList);
-router.get('/quanlislide',authMiddleware, slideController.getList);
+const { checkLogin, isAdmin } = require('../middlewares/authMiddleware'); 
+// Đổi lại đúng đường dẫn file của Toàn nhé
+router.get('/',checkLogin, adminController.getTongquan);
+router.get('/quanlixemay',checkLogin, xemayController.getListAdmin);
+router.get('/quanlikhachhang', checkLogin,isAdmin,customerController.getList);
+router.get('/quanlikhachhang', checkLogin,customerController.getList);
+router.get('/quanlislide',checkLogin, slideController.getList);
 
 module.exports = router;

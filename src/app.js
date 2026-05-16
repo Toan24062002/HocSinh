@@ -59,6 +59,7 @@ const xemayRoutes = require('./routes/xemayRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const slideRoutes = require('./routes/slideRoutes');
 const authRoutes = require('./routes/authRoutes');
+const theodoiRoutes = require('./routes/theodoiRoutes');
 
 // 8. Sử dụng các Route
 app.get('/', (req, res) => {
@@ -71,11 +72,14 @@ app.get('/dichvu', (req, res) => {
     res.render('pages/dichvu', { title: 'Trang dịch vụ'});
 });
 
+
+
 app.use('/khachhang', customerRoutes);
 app.use('/themmoikhachhang', customerRoutes);
 app.use('/xemay', xemayRoutes);
 app.use('/admin', adminRoutes);
 app.use('/slide', slideRoutes);
 app.use('/auth', authRoutes);
+app.use('/', theodoiRoutes);
 
 module.exports = app;

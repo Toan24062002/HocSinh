@@ -1,11 +1,29 @@
-module.exports = (req, res, next) => {
-    // Kiểm tra xem trong session đã có thông tin user chưa
+const checkLogin = (req, res, next) => {
     if (req.session && req.session.user) {
-        // Nếu đã đăng nhập, cho phép đi tiếp vào Controller
-        return next();
+        return next(); // Hợp lệ, cho đi tiếp
     } else {
-        // Nếu chưa đăng nhập, chuyển hướng về trang login kèm thông báo
-        // Toàn có thể dùng flash message để hiện thông báo lỗi
         return res.redirect('/auth/dangnhap');
     }
+};
+
+const isAdmin = (req, res, next) => {
+    if (req.session && req.session.role === 'admin') {
+        return next(); 
+    } 
+    
+    return res.render('admin/tongquan', { 
+        title: 'Trang Chủ',
+        user: 'Nguyễn Toàn',
+        layout:'layouts/admin',
+        thongBao: {
+            icon: 'error', // hiện dấu X màu đỏ
+            title: 'Từ chối truy cập!',
+            text: 'Tài khoản của bạn không có quyền Admin.'
+        }
+    });
+};
+
+module.exports = {
+    checkLogin,
+    isAdmin
 };

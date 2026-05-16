@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Định Vị Xe Tự Lái</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { height: 100vh; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <script>
+        // Khởi tạo bản đồ theo tọa độ của bạn
+        const map = L.map('map').setView([10.806144, 106.639434], 15); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Chấm đỏ ban đầu
+        const carMarker = L.circleMarker([10.806144, 106.639434], {
+            color: 'white', weight: 2, fillColor: 'red', fillOpacity: 1.0, radius: 9 
+        }).addTo(map);
+
+        carMarker.bindPopup("<b>Đang chờ tín hiệu từ Postman...</b>").openPopup();
+
+        // Hàm cập nhật vị trí thật
+        function updateCarLocation(newLat, newLon, speed, battery, deviceId) {
+            carMarker.setLatLng([newLat, newLon]);
+            carMarker.setPopupContent(`<b>Xe: ${deviceId}</b><br>Trạng thái: Đang di chuyển<br>Tốc độ: ${speed} km/h<br>Pin: ${battery}%`);
+            map.panTo([newLat, newLon]); // Camera chạy theo xe
+        }
+
+        // ====== KẾT NỐI ĐẾN SERVER NODE.JS ======
+        const socket = io("http://localhost:3000");
+
+        // Lắng nghe lệnh từ Postman truyền qua Node.js băn xuống
+        socket.on('xe-di-chuyen', (data) => {
+            console.log("Nhận dữ liệu từ Postman:", data);
+            // Gọi hàm dịch chuyển chấm đỏ bằng dữ liệu từ Postman!
+            updateCarLocation(data.lat, data.lon, data.speed, data.battery, data.deviceId);
+        });
+    </script>
+</body>
+</html>

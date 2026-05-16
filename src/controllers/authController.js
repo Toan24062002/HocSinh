@@ -117,21 +117,30 @@ exports.postLogin = async (req, res) => {
         const user = await Account.findOne({ email });
         if (!user) {
             return res.render('auth/dangnhap', { error: 'Tài khoản không tồn tại!', layout: 'layouts/auth_layout' ,
-        title: 'Đăng nhập' });
+        title: 'Đăng nhập',thongBao: {
+            icon: 'error', // hiện dấu X màu đỏ
+            title: 'Thông báo',
+            text: 'Sai tài khoản hoặc mật khẩu.'
+        }  });
         }
 
         // 2. So sánh mật khẩu bằng bcrypt
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.render('auth/dangnhap', { error: 'Sai mật khẩu!', layout: 'layouts/auth_layout' ,
-        title: 'Đăng nhập' });
+        title: 'Đăng nhập',thongBao: {
+            icon: 'error', // hiện dấu X màu đỏ
+            title: 'Thông báo',
+            text: 'Sai tài khoản hoặc mật khẩu.'
+        }  });
         }
 
         // 3. Tạo Session (Lưu thông tin đăng nhập)
         req.session.user = {
             id: user._id,
             fullname: user.fullname,
-            email: user.email
+            email: user.email,
+            role: user.role
         };
 
         res.redirect('/admin'); // Vào trang quản trị

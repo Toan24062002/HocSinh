@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
     <style>
         :root {
             --sidebar-width: 250px;
@@ -150,6 +153,28 @@
         <%- body -%>
     </div>
     <script src="/javascript/admscript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Dùng cú pháp EJS để kiểm tra xem Backend có gửi biến 'thongBao' về không
+    // Chữ 'undefined' phải để trong dấu nháy
+    const thongBaoTuServer = '<%- typeof thongBao !== "undefined" ? JSON.stringify(thongBao) : "" %>';
+
+    if (thongBaoTuServer) {
+        // Chuyển chuỗi chữ từ Server thành Object JavaScript
+        const dataAlert = JSON.parse(thongBaoTuServer);
+        
+        // Kích nổ hộp thoại SweetAlert2 siêu đẹp
+        Swal.fire({
+            icon: dataAlert.icon,   // 'success', 'error', 'warning', 'info'
+            title: dataAlert.title, // Tiêu đề bự
+            text: dataAlert.text,   // Đoạn mô tả nhỏ ở dưới
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6',
+            timer: 3000 // Tự động đóng sau 3 giây nếu khách không bấm nút
+        });
+    }
+</script>
 </body>
 
 </html>

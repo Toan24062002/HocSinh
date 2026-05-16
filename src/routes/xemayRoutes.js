@@ -8,4 +8,8 @@ router.get('/addxemay', xemayController.getAddForm);
 router.post('/addxemay', xemayController.postAdd);
 router.get('/delete/:id', xemayController.deleteXemay);
 
+
+router.get('/api/xemay', xemayController.getApiList);
+
+
 module.exports = router;
