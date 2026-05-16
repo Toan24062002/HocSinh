@@ -19,38 +19,59 @@
 
     <script>
         // Khởi tạo bản đồ theo tọa độ của bạn
-        const map = L.map('map').setView([10.806144, 106.639434], 15); 
+       // Khởi tạo bản đồ theo tọa độ trung tâm ban đầu
+const map = L.map('map').setView([10.806144, 106.639434], 15); 
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// ============================================================
+// CHỖ THAY ĐỔI QUAN TRỌNG: Quản lý danh sách xe bằng Object
+// ============================================================
+const xeMarkers = {}; // Nơi chứa tất cả các chấm tròn của các xe (ví dụ: { "77009513": marker1, "68AB71526": marker2 })
+
+// ====== KẾT NỐI ĐẾN SERVER NODE.JS ======
+const socket = io({
+    transports: ['websocket']
+});
+
+// Lắng nghe tín hiệu xe di chuyển từ Server bắn xuống
+socket.on('xe-di-chuyen', (data) => {
+    console.log("Nhận dữ liệu từ hệ thống:", data);
+    
+    const { deviceId, lat, lon, speed, battery } = data;
+
+    // BƯỚC 1: Nếu cái xe này CHƯA TỪNG xuất hiện trên bản đồ -> Tạo mới một chấm tròn cho nó
+    if (!xeMarkers[deviceId]) {
+        console.log(`Bản đồ phát hiện xe mới gia nhập: ${deviceId}`);
+        
+        // Tạo chấm tròn riêng cho xe này và cấu hình màu sắc
+        xeMarkers[deviceId] = L.circleMarker([lat, lon], {
+            color: 'white', 
+            weight: 2, 
+            fillColor: 'red', // Bạn có thể viết logic đổi màu ngẫu nhiên cho mỗi xe ở đây
+            fillOpacity: 1.0, 
+            radius: 9 
         }).addTo(map);
 
-        // Chấm đỏ ban đầu
-        const carMarker = L.circleMarker([10.806144, 106.639434], {
-            color: 'white', weight: 2, fillColor: 'red', fillOpacity: 1.0, radius: 9 
-        }).addTo(map);
+        // Tạo khung thông tin trống cho xe
+        xeMarkers[deviceId].bindPopup("");
+    }
 
-        carMarker.bindPopup("<b>Đang chờ tín hiệu từ Postman...</b>").openPopup();
+    // BƯỚC 2: Cập nhật tọa độ và nội dung của ĐÚNG CÁI XE ĐÓ
+    xeMarkers[deviceId].setLatLng([lat, lon]);
+    xeMarkers[deviceId].setPopupContent(`
+        <b>Xe: ${deviceId}</b><br>
+        Trạng thái: Đang hoạt động<br>
+        Tốc độ: ${speed} km/h<br>
+        Pin điện thoại: ${battery}%
+    `);
 
-        // Hàm cập nhật vị trí thật
-        function updateCarLocation(newLat, newLon, speed, battery, deviceId) {
-            carMarker.setLatLng([newLat, newLon]);
-            carMarker.setPopupContent(`<b>Xe: ${deviceId}</b><br>Trạng thái: Đang di chuyển<br>Tốc độ: ${speed} km/h<br>Pin: ${battery}%`);
-            map.panTo([newLat, newLon]); // Camera chạy theo xe
-        }
-
-        // ====== KẾT NỐI ĐẾN SERVER NODE.JS (ĐÃ FIX CHO RENDER) ======
-        // Để trống đường dẫn và ép dùng websocket để chạy mượt trên Render
-        const socket = io({
-            transports: ['websocket']
-        });
-
-        // Lắng nghe lệnh từ Postman truyền qua Node.js bắn xuống
-        socket.on('xe-di-chuyen', (data) => {
-            console.log("Nhận dữ liệu từ Postman:", data);
-            // Gọi hàm dịch chuyển chấm đỏ bằng dữ liệu từ Postman!
-            updateCarLocation(data.lat, data.lon, data.speed, data.battery, data.deviceId);
-        });
+    // LƯU Ý VỀ CAMERA (map.panTo): 
+    // Vì có nhiều xe chạy cùng lúc, nếu để camera tự động chạy theo tất cả sẽ bị giật.
+    // Tạm thời bỏ map.panTo đi để người quản lý có thể nhìn tổng quan toàn bản đồ, ai muốn xem xe nào thì tự bấm vào chấm đỏ của xe đó để xem popup thông tin.
+});
     </script>
 </body>
 </html>
