@@ -39,10 +39,13 @@
             map.panTo([newLat, newLon]); // Camera chạy theo xe
         }
 
-        // ====== KẾT NỐI ĐẾN SERVER NODE.JS ======
-        const socket = io("http://localhost:3000");
+        // ====== KẾT NỐI ĐẾN SERVER NODE.JS (ĐÃ FIX CHO RENDER) ======
+        // Để trống đường dẫn và ép dùng websocket để chạy mượt trên Render
+        const socket = io({
+            transports: ['websocket']
+        });
 
-        // Lắng nghe lệnh từ Postman truyền qua Node.js băn xuống
+        // Lắng nghe lệnh từ Postman truyền qua Node.js bắn xuống
         socket.on('xe-di-chuyen', (data) => {
             console.log("Nhận dữ liệu từ Postman:", data);
             // Gọi hàm dịch chuyển chấm đỏ bằng dữ liệu từ Postman!
