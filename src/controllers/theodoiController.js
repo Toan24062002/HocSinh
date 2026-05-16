@@ -6,29 +6,29 @@ const gettrack = (req, res) => {
 
 const capNhatToaDo = (req, res) => {
     try {
-        // 1. Bóc tách dữ liệu từ Postman hoặc App Traccar Client gửi lên
         const { id, lat, lon, speed, bearing, batt } = req.body;
-
         console.log(`[Controller] Nhận dữ liệu xe ${id}: ${lat}, ${lon}`);
 
-        // 2. Lấy biến Socket.io đã được cấu hình từ server.js
+        // Lấy biến io từ app
         const io = req.app.get('io');
 
-        // 3. Bắn tín hiệu real-time xuống cho file map.html hiển thị chấm đỏ
-        io.emit('xe-di-chuyen', {
-            deviceId: id || "Xe-Chưa-Đặt-Tên",
-            lat: parseFloat(lat),
-            lon: parseFloat(lon),
-            speed: parseFloat(speed) || 0,
-            bearing: parseFloat(bearing) || 0,
-            battery: parseFloat(batt) || 100
-        });
+        // BẮT BUỘC PHẢI THÊM CHỐT CHẶN NÀY ĐỂ CHẠY TRÊN VERCEL
+        if (io) {
+            io.emit('xe-di-chuyen', {
+                deviceId: id || "Xe-Chưa-Đặt-Tên",
+                lat: parseFloat(lat),
+                lon: parseFloat(lon),
+                speed: parseFloat(speed) || 0,
+                bearing: parseFloat(bearing) || 0,
+                battery: parseFloat(batt) || 100
+            });
+        } else {
+            // Khi chạy trên Vercel, dòng này sẽ in ra ở mục Logs của Vercel chứ không làm sập app
+            console.log("[Vercel Mode] Đang không có kết nối Socket.io hoạt động.");
+        }
 
-        // 4. [SAU NÀY] Bạn sẽ viết thêm logic lưu vào MongoDB tại đây:
-        // await TrackingModel.create({ deviceId: id, location: ... })
-
-        // 5. Phản hồi thành công về cho thiết bị/Postman
-        return res.status(200).send("Controller đã xử lý và phát tín hiệu thành công!");
+        // Trả về 200 OK cho Postman
+        return res.status(200).send("Controller đã xử lý thành công trên Vercel!");
 
     } catch (error) {
         console.error("Lỗi tại theodoiController:", error);
