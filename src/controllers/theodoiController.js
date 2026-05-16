@@ -6,13 +6,21 @@ const gettrack = (req, res) => {
 
 const capNhatToaDo = (req, res) => {
     try {
-        const { id, lat, lon, speed, bearing, batt } = req.body;
+        // GIẢI PHÁP: Nếu req.body có dữ liệu (Postman) thì dùng, không thì lấy từ req.query (App điện thoại)
+        const inputData = Object.keys(req.body).length > 0 ? req.body : req.query;
+
+        // Bóc tách dữ liệu từ biến trung gian inputData
+        const { id, lat, lon, speed, bearing, batt } = inputData;
+
+        // Chốt chặn: Nếu gói tin rác không có tọa độ thì bỏ qua luôn, không xử lý tiếp
+        if (!lat || !lon) {
+            return res.status(400).send("Dữ liệu không chứa tọa độ hợp lệ");
+        }
+
         console.log(`[Controller] Nhận dữ liệu xe ${id}: ${lat}, ${lon}`);
 
-        // Lấy biến io từ app
         const io = req.app.get('io');
 
-        // BẮT BUỘC PHẢI THÊM CHỐT CHẶN NÀY ĐỂ CHẠY TRÊN VERCEL
         if (io) {
             io.emit('xe-di-chuyen', {
                 deviceId: id || "Xe-Chưa-Đặt-Tên",
@@ -22,13 +30,9 @@ const capNhatToaDo = (req, res) => {
                 bearing: parseFloat(bearing) || 0,
                 battery: parseFloat(batt) || 100
             });
-        } else {
-            // Khi chạy trên Vercel, dòng này sẽ in ra ở mục Logs của Vercel chứ không làm sập app
-            console.log("[Vercel Mode] Đang không có kết nối Socket.io hoạt động.");
         }
 
-        // Trả về 200 OK cho Postman
-        return res.status(200).send("Controller đã xử lý thành công trên Vercel!");
+        return res.status(200).send("Controller đã xử lý thành công!");
 
     } catch (error) {
         console.error("Lỗi tại theodoiController:", error);
