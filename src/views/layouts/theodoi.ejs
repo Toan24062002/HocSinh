@@ -58,14 +58,20 @@ socket.on('xe-di-chuyen', (data) => {
         // Tạo khung thông tin trống cho xe
         xeMarkers[deviceId].bindPopup("");
     }
+    
 
     // BƯỚC 2: Cập nhật tọa độ và nội dung của ĐÚNG CÁI XE ĐÓ
     xeMarkers[deviceId].setLatLng([lat, lon]);
+    const googleMapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
     xeMarkers[deviceId].setPopupContent(`
         <b>Xe: ${deviceId}</b><br>
-        Trạng thái: Đang hoạt động<br>
-        Tốc độ: ${speed} km/h<br>
-        Pin điện thoại: ${battery}%
+    Trạng thái: Đang hoạt động<br>
+    Tốc độ: ${speed} km/h<br>
+    Pin điện thoại: ${battery}%<br>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 8px 0;">
+    <a href="${googleMapsLink}" target="_blank" style="color: #1a73e8; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 4px;">
+        📍 Xem trên Google Maps
+    </a>
     `);
 
     // LƯU Ý VỀ CAMERA (map.panTo): 
