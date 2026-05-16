@@ -6,37 +6,55 @@ const gettrack = (req, res) => {
 
 const capNhatToaDo = (req, res) => {
     try {
-        // 1. IN RA LOG ĐỂ KIỂM TRA CHÍNH XÁC APP ĐANG GỬI KIỂU GÌ (Xem trên Render Logs)
-        console.log("[DEBUG APP] Body nhận được:", req.body);
-        console.log("[DEBUG APP] Query nhận được:", req.query);
+        let id, lat, lon, speed, bearing, batt;
 
-        // 2. GIẢI PHÁP BAO QUÁT: Gộp tất cả dữ liệu từ Query và Body vào làm một
-        const inputData = { ...req.query, ...req.body };
+        // 1. KIỂM TRA: Nếu là cấu trúc lồng nhau từ App điện thoại iOS/Transistor
+        if (req.body && req.body.location) {
+            id = req.body.device_id || "Xe-App-Dien-Thoai";
+            lat = req.body.location.coords.latitude;
+            lon = req.body.location.coords.longitude;
+            speed = req.body.location.coords.speed;
+            bearing = req.body.location.coords.heading;
+            // Pin của app gửi dạng 0.55 nên nhân với 100 thành 55%
+            batt = req.body.location.battery ? (req.body.location.battery.level * 100) : 100;
+        } 
+        // 2. Ngược lại, nếu là cấu trúc phẳng từ Postman hoặc bản Android chuẩn
+        else {
+            const inputData = { ...req.query, ...req.body };
+            id = inputData.id || "Xe-Postman";
+            lat = inputData.lat;
+            lon = inputData.lon;
+            speed = inputData.speed;
+            bearing = inputData.bearing;
+            batt = inputData.batt;
+        }
 
-        // 3. Bóc tách các thông số
-        const { id, lat, lon, speed, bearing, batt } = inputData;
-
-        // 4. Chốt chặn: Nếu gói tin trống không có tọa độ thì từ chối luôn
+        // Chốt chặn: Không có tọa độ thì dừng
         if (!lat || !lon) {
-            console.log(`⚠️ Bỏ qua gói tin trạng thái không có tọa độ từ xe: ${id || 'Ẩn danh'}`);
+            console.log(`⚠️ Bỏ qua gói tin không có tọa độ từ: ${id}`);
             return res.status(400).send("Dữ liệu không chứa tọa độ hợp lệ");
         }
 
-        console.log(`[Controller] ✅ ĐÃ ĐỌC ĐƯỢC XE ${id}: ${lat}, ${lon}`);
+        // Xử lý giá trị speed và bearing nếu bị âm (app trả về -1 khi đứng im)
+        const validSpeed = parseFloat(speed) < 0 ? 0 : parseFloat(speed);
+        const validBearing = parseFloat(bearing) < 0 ? 0 : parseFloat(bearing);
 
+        console.log(`[Controller] ✅ ĐÃ ĐỌC ĐƯỢC XE ${id}: ${lat}, ${lon} | Tốc độ: ${validSpeed} km/h`);
+
+        // Phát tín hiệu Real-time xuống cho Web bản đồ
         const io = req.app.get('io');
-
         if (io) {
             io.emit('xe-di-chuyen', {
-                deviceId: id || "Xe-Chưa-Đặt-Tên",
+                deviceId: id,
                 lat: parseFloat(lat),
                 lon: parseFloat(lon),
-                speed: parseFloat(speed) || 0,
-                bearing: parseFloat(bearing) || 0,
+                speed: validSpeed,
+                bearing: validBearing,
                 battery: parseFloat(batt) || 100
             });
         }
 
+        // Trả về 200 để App điện thoại xóa hàng đợi (clear queue) trong bộ nhớ
         return res.status(200).send("Controller đã xử lý thành công!");
 
     } catch (error) {
