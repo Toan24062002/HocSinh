@@ -6,18 +6,23 @@ const gettrack = (req, res) => {
 
 const capNhatToaDo = (req, res) => {
     try {
-        // GIẢI PHÁP: Nếu req.body có dữ liệu (Postman) thì dùng, không thì lấy từ req.query (App điện thoại)
-        const inputData = Object.keys(req.body).length > 0 ? req.body : req.query;
+        // 1. IN RA LOG ĐỂ KIỂM TRA CHÍNH XÁC APP ĐANG GỬI KIỂU GÌ (Xem trên Render Logs)
+        console.log("[DEBUG APP] Body nhận được:", req.body);
+        console.log("[DEBUG APP] Query nhận được:", req.query);
 
-        // Bóc tách dữ liệu từ biến trung gian inputData
+        // 2. GIẢI PHÁP BAO QUÁT: Gộp tất cả dữ liệu từ Query và Body vào làm một
+        const inputData = { ...req.query, ...req.body };
+
+        // 3. Bóc tách các thông số
         const { id, lat, lon, speed, bearing, batt } = inputData;
 
-        // Chốt chặn: Nếu gói tin rác không có tọa độ thì bỏ qua luôn, không xử lý tiếp
+        // 4. Chốt chặn: Nếu gói tin trống không có tọa độ thì từ chối luôn
         if (!lat || !lon) {
+            console.log(`⚠️ Bỏ qua gói tin trạng thái không có tọa độ từ xe: ${id || 'Ẩn danh'}`);
             return res.status(400).send("Dữ liệu không chứa tọa độ hợp lệ");
         }
 
-        console.log(`[Controller] Nhận dữ liệu xe ${id}: ${lat}, ${lon}`);
+        console.log(`[Controller] ✅ ĐÃ ĐỌC ĐƯỢC XE ${id}: ${lat}, ${lon}`);
 
         const io = req.app.get('io');
 
